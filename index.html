@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boldog szülinapot, Zibu!</title>
+<style>
+  :root {
+    --bg-gradient: linear-gradient(135deg, #1f005c 0%, #35004e 50%, #ff5f6d 100%);
+    --text-color: #ffffff;
+    --accent-color: #ff66cc;
+    --footer-color: #188ddb;
+  }
+
+  /* Alap beállítások, görgetés eltüntetése */
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #a8e6cf; /* tetszőleges egységes szín */
+    color: #ffffff;
+  }
+
+  /* Középre pozicionált blokk */
+ .birthday-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  padding: 40px 0; /* felül és alul távolság a görgetéshez */
+  /* Nincs absolute pozíció */
+}
+
+  .birthday-center .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255,255,255,0.12);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4), inset 0 -6px 12px rgba(0,0,0,0.15);
+  }
+
+  .birthday-center .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .birthday-center h1 {
+    font-size: 34px;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: 0.4px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  }
+
+  /* Zene gomb */
+  #musicBtn {
+    padding: 10px 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  #musicBtn:hover {
+    background-color: #ff3385;
+    transform: scale(1.05);
+  }
+
+  /* Képek rugalmas sorban */
+ .image-row {
+  display: flex;
+  flex-wrap: wrap;        /* új sor, ha nem fér el */
+  gap: 10px;              /* távolság a képek között */
+  justify-content: center;   /* középre igazítás */
+}
+
+.image-box {
+  width: 400px;           /* fix szélesség */
+  height: 300px;          /* fix magasság */
+  border-radius: 12px;    /* lekerekített sarkok */
+  overflow: hidden;       /* a kép kilógását vágja */
+  background-color: #ddd; /* opcionális háttér, ha a kép kisebb */
+  cursor: pointer;
+  flex-shrink: 0;         /* ne zsugorodjon */
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* kitölti a boxot, megtartja az arányt, levág ha kell */
+  display: block;
+}
+
+  /* Alul lila sáv */
+.love-footer {
+  position: relative;   /* ne legyen fixed */
+  bottom: auto;
+  left: auto;
+  width: 100%;
+  height: 50px;
+  background-color: #3498db; /* vagy a kívánt kék */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+
+
+  /* Konfetti canvas */
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:visible;
+    z-index: 500;
+  }
+
+  #lightbox {
+  display: none;               /* alapból rejtve */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+}
+
+
+  .sparkle {
+    display: inline-block;
+    animation: sparkle 2.6s infinite;
+  }
+
+  @keyframes sparkle {
+    0% { transform: translateY(0) scale(1); opacity:1; }
+    50% { transform: translateY(-6px) scale(1.03); opacity:0.95; }
+    100% { transform: translateY(0) scale(1); opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Zene -->
+<audio id="bgmusic" loop>
+  <source src="szulinap.mp3" type="audio/mpeg">
+  A böngésződ nem támogatja a hang lejátszását.
+</audio>
+
+<!-- Középre pozicionált blokk -->
+<div class="birthday-center">
+  <div class="avatar">
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHg2YmZpems5eG16Z3h1NGh6cnhmd3NoMXU1aGQzZnNhcGlxbXM2eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kL1KAdQYmKXle/giphy.gif" alt="Avatar">
+  </div>
+  <h1><span class="sparkle">Boldog szülinapot, Dombor!</span></h1>
+  <button id="musicBtn" onclick="toggleMusic()">🎵 Indítsd el a zenét</button>
+
+  <!-- Képek -->
+  <div class="image-row">
+    <div class="image-box">
+        <img src="Screenshot_20210605-175125_Snapseed-01-01.jpeg" alt="Kép 1" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P5103356.jpg" alt="Kép 2" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8208449.jpg" alt="Kép 3" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_7444.jpg" alt="Kép 4" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_0167.jpg" alt="Kép 5" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_20190418_133224.jpg" alt="Kép 6" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20170818_172554.jpg" alt="Kép 7" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="PC163777.jpg" alt="Kép 8" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P4243472.jpg" alt="Kép 9" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P7096669.jpg" alt="Kép 10" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="PA248930.jpg" alt="Kép 11" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_3017.jpg" alt="Kép 12" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC00570.jpg" alt="Kép 13" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_2295.jpg" alt="Kép 14" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_20180421_133114.jpg" alt="Kép 15" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20180422_110042.jpg" alt="Kép 16" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20210218_132704-01.jpeg" alt="Kép 17" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20200307_133638.jpg" alt="Kép 18" onclick="openLightbox(this.src)"> 
+    </div>
+    <div class="image-box">
+        <img src="DSC_1350.jpg" alt="Kép 19" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P7157302.jpg" alt="Kép 20" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8148545.jpg" alt="Kép 21" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8168367.jpg" alt="Kép 22" onclick="openLightbox(this.src)">
+    </div>
+  </div>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Nagy kép">
+</div>
+
+<!-- Alul lila sáv -->
+<div class="love-footer">🎂 Készült sok szeretettel, Lilla és Kristóf 🎂</div>
+
+<!-- Konfetti -->
+<canvas id="confettiCanvas" class="confetti"></canvas>
+
+<script>
+  // Zene gomb funkció
+  function toggleMusic(){
+    const audio = document.getElementById('bgmusic');
+    const btn = document.getElementById('musicBtn');
+    if(audio.paused){
+      audio.play();
+      btn.textContent = "🔇 Kapcsold ki a zenét";
+    } else {
+      audio.pause();
+      btn.textContent = "🎵 Indítsd a zenét";
+    }
+  }
+
+  // Konfetti
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+  let particles = [];
+  const colors = ['#ff6fb5', '#6bffda', '#ffd166', '#9ad0f5', '#c792ff'];
+
+  function makeParticles(){
+    particles = [];
+    for(let i=0;i<120;i++){
+      particles.push({
+        x: Math.random()*W,
+        y: Math.random()*-H,
+        r: 6 + Math.random()*9,
+        d: Math.random()*100 + 20,
+        vx: (Math.random()-0.5)*2,
+        vy: 2 + Math.random()*5,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        tilt: Math.random()*0.5
+      });
+    }
+  }
+
+  function openLightbox(src){
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  lb.style.display = 'flex';
+}
+
+function closeLightbox(){
+  document.getElementById('lightbox').style.display = 'none';
+}
+
+
+  function updateParticles(){
+    for(let p of particles){
+      p.x += p.vx;
+      p.y += p.vy;
+      p.tilt += 0.05;
+      if(p.y > H + 30){
+        p.x = Math.random()*W;
+        p.y = -20 - Math.random()*H;
+      }
+    }
+  }
+
+  function drawParticles(){
+    ctx.clearRect(0,0,W,H);
+    for(let p of particles){
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, p.r, p.r*0.6, p.tilt, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function loop(){
+    updateParticles();
+    drawParticles();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', ()=>{
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+
+  makeParticles();
+  loop();
+</script>
+
+</body>
+</html>
