@@ -312,6 +312,16 @@
     }
   }
 
+document.querySelectorAll('.media-video').forEach(video => {
+    video.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  });
+  
   // Konfetti
   const canvas = document.getElementById('confettiCanvas');
   const ctx = canvas.getContext('2d');
@@ -388,6 +398,7 @@ function closeLightbox(){
 </body>
 
 </html>
+
 
 
 
