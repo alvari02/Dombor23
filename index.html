@@ -5,223 +5,498 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Boldog szülinapot, Zibu!</title>
 <style>
-  :root{
-    --bg:#a8e6cf;
-    --accent:#ff66cc;
-    --footer:#3498db;
+  :root {
+    --bg-gradient: linear-gradient(135deg, #1f005c 0%, #35004e 50%, #ff5f6d 100%);
+    --text-color: #ffffff;
+    --accent-color: #ff66cc;
+    --footer-color: #188ddb;
   }
-  html,body{margin:0;padding:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:var(--bg);color:#111;}
-  .wrap{max-width:1200px;margin:0 auto;padding:40px;}
-  .birthday-center{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;padding:20px 0 30px;}
-  .avatar{width:120px;height:120px;border-radius:50%;overflow:hidden;border:4px solid rgba(0,0,0,0.08);box-shadow:0 6px 18px rgba(0,0,0,0.12);background:#fff;}
-  .avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-  h1{margin:0;font-size:32px;color:#063; text-shadow:0 1px 0 rgba(255,255,255,0.4);}
-  #musicBtn{padding:10px 22px;border-radius:999px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.12);}
-  #musicBtn:hover{transform:scale(1.03);}
 
-  /* galéria */
-  .image-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
-  .image-box, .media-box{width:320px;height:220px;border-radius:12px;overflow:hidden;background:#ddd;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
-  .image-box img, .media-box img, .media-box video{width:100%;height:100%;object-fit:cover;display:block;}
+  /* Alap beállítások, görgetés eltüntetése */
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #a8e6cf; /* tetszőleges egységes szín */
+    color: #ffffff;
+  }
 
-  /* play overlay (ikon) */
-  .media-box .play-overlay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;font-size:48px;color:rgba(255,255,255,0.95);text-shadow:0 4px 12px rgba(0,0,0,0.5)}
+  /* Középre pozicionált blokk */
+ .birthday-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  padding: 40px 0; /* felül és alul távolság a görgetéshez */
+  /* Nincs absolute pozíció */
+}
 
-  /* modal (lightbox) */
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:12000;align-items:center;justify-content:center;padding:20px}
-  .modal.open{display:flex}
-  .modal-content{max-width:95%;max-height:95%;display:flex;align-items:center;justify-content:center;position:relative}
-  .modal img, .modal video{max-width:100%;max-height:100%;border-radius:10px;display:block}
-  .modal .close{position:absolute;right:-6px;top:-6px;background:transparent;color:#fff;font-size:40px;border:0;cursor:pointer;padding:6px 10px}
-  /* footer */
-  .love-footer{width:100%;height:56px;background:var(--footer);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;position:relative;margin-top:28px;border-radius:6px;}
-  /* confetti canvas */
-  .confetti{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1000}
-  /* responsive */
-  @media (max-width:780px){ .image-box,.media-box{width:45vw;height:32vw} }
-  @media (max-width:420px){ .image-box,.media-box{width:90vw;height:60vw} }
+  .birthday-center .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255,255,255,0.12);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4), inset 0 -6px 12px rgba(0,0,0,0.15);
+  }
+
+  .birthday-center .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .birthday-center h1 {
+    font-size: 34px;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: 0.4px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+  }
+
+  /* Zene gomb */
+  #musicBtn {
+    padding: 10px 25px;
+    border-radius: 50px;
+    border: none;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+
+  #musicBtn:hover {
+    background-color: #ff3385;
+    transform: scale(1.05);
+  }
+
+  /* Képek rugalmas sorban */
+ .image-row {
+  display: flex;
+  flex-wrap: wrap;        /* új sor, ha nem fér el */
+  gap: 10px;              /* távolság a képek között */
+  justify-content: center;   /* középre igazítás */
+}
+
+.image-box {
+  width: 400px;           /* fix szélesség */
+  height: 300px;          /* fix magasság */
+  border-radius: 12px;    /* lekerekített sarkok */
+  overflow: hidden;       /* a kép kilógását vágja */
+  background-color: #ddd; /* opcionális háttér, ha a kép kisebb */
+  cursor: pointer;
+  flex-shrink: 0;         /* ne zsugorodjon */
+}
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      /* kitölti a boxot, megtartja az arányt, levág ha kell */
+  display: block;
+}
+
+.media-box {
+  width: 400px;         /* vagy amit használsz a képeknél */
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #000;
+}
+
+.media-box img,
+.media-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img,
+.modal video {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+}
+
+.modal .close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+  
+  /* Alul lila sáv */
+.love-footer {
+  position: relative;   /* ne legyen fixed */
+  bottom: auto;
+  left: auto;
+  width: 100%;
+  height: 50px;
+  background-color: #3498db; /* vagy a kívánt kék */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+
+
+  /* Konfetti canvas */
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    overflow:visible;
+    z-index: 500;
+  }
+
+  #lightbox {
+  display: none;               /* alapból rejtve */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
+}
+
+
+  .sparkle {
+    display: inline-block;
+    animation: sparkle 2.6s infinite;
+  }
+
+  @keyframes sparkle {
+    0% { transform: translateY(0) scale(1); opacity:1; }
+    50% { transform: translateY(-6px) scale(1.03); opacity:0.95; }
+    100% { transform: translateY(0) scale(1); opacity:1; }
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- audio (helyi fájl neve legyen pontos) -->
-    <audio id="bgmusic" loop>
-      <source src="szulinap.mp3" type="audio/mpeg">
-    </audio>
 
-    <!-- középső blokk -->
-    <div class="birthday-center">
-      <div class="avatar" aria-hidden="true">
-        <img src="https://media.giphy.com/media/kL1KAdQYmKXle/giphy.gif" alt="avatar">
-      </div>
-      <h1>Boldog szülinapot, Dombor! 🎉</h1>
-      <button id="musicBtn" onclick="toggleMusic()">🎵 Indítsd el a zenét</button>
-    </div>
+<!-- Zene -->
+<audio id="bgmusic" loop>
+  <source src="szulinap.mp3" type="audio/mpeg">
+  A böngésződ nem támogatja a hang lejátszását.
+</audio>
 
-    <!-- galéria: képek és videó (cseréld a fájlneveket szükség szerint) -->
-    <div class="image-row" aria-live="polite">
-      <div class="image-box"><img src="kep1.jpg" alt="Kép 1"></div>
-      <div class="image-box"><img src="kep2.jpg" alt="Kép 2"></div>
-      <div class="image-box"><img src="kep3.jpg" alt="Kép 3"></div>
-      <div class="image-box"><img src="kep4.jpg" alt="Kép 4"></div>
-
-      <!-- videó előnézet: kattintva modalban indul el -->
-      <div class="media-box" data-type="video">
-        <video class="media-video" preload="metadata" poster="boritokep.jpg">
-          <source src="video.mp4" type="video/mp4">
-        </video>
-        <div class="play-overlay">▶</div>
-      </div>
-
-      <!-- további képek -->
-      <div class="image-box"><img src="kep5.jpg" alt="Kép 5"></div>
-      <div class="image-box"><img src="kep6.jpg" alt="Kép 6"></div>
-    </div>
-
-    <div class="love-footer">🎂 Készült sok szeretettel, Lilla és Kristóf 🎂</div>
+<!-- Középre pozicionált blokk -->
+<div class="birthday-center">
+  <div class="avatar">
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHg2YmZpems5eG16Z3h1NGh6cnhmd3NoMXU1aGQzZnNhcGlxbXM2eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kL1KAdQYmKXle/giphy.gif" alt="Avatar">
   </div>
+  <h1><span class="sparkle">Boldog szülinapot, Dombor!</span></h1>
+  <button id="musicBtn" onclick="toggleMusic()">🎵 Indítsd el a zenét</button>
 
-  <!-- modal (egyesített kép/videó) -->
-  <div id="mediaModal" class="modal" aria-hidden="true" role="dialog" aria-label="Média megtekintése">
-    <div class="modal-content">
-      <button class="close" aria-label="Bezárás">&times;</button>
-      <img id="modalImage" src="" alt="" style="display:none">
-      <video id="modalVideo" controls style="display:none">
-        <source id="modalVideoSource" src="" type="video/mp4">
+  <!-- Képek -->
+  <div class="image-row">
+    <div class="image-box">
+        <img src="Screenshot_20210605-175125_Snapseed-01-01.jpeg" alt="Kép 1" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P5103356.jpeg" alt="Kép 2" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8208449.jpeg" alt="Kép 3" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_7444.jpeg" alt="Kép 4" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_0167.jpeg" alt="Kép 5" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_20190418_133224.jpeg" alt="Kép 6" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20170818_172554.jpeg" alt="Kép 7" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="PC163777.jpeg" alt="Kép 8" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P4243472.jpeg" alt="Kép 9" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P7096669.jpeg" alt="Kép 10" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="PA248930.jpeg" alt="Kép 11" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC_3017.jpeg" alt="Kép 12" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="DSC00570.jpeg" alt="Kép 13" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_2295.jpeg" alt="Kép 14" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="IMG_20180421_133114.jpeg" alt="Kép 15" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20180422_110042.jpeg" alt="Kép 16" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20210218_132704-01.jpeg" alt="Kép 17" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="20200307_133638.jpeg" alt="Kép 18" onclick="openLightbox(this.src)"> 
+    </div>
+    <div class="image-box">
+        <img src="DSC_1350.jpeg" alt="Kép 19" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P7157302.jpeg" alt="Kép 20" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8148545.jpeg" alt="Kép 21" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="P8168367.jpeg" alt="Kép 22" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="767fd8a2e066c2323a83c92ca0af5b54.jpeg" alt="Kép 23" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="dc0908983b305c94a04cb8b7f26377cc.jpeg" alt="Kép 24" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="89268749_201354191121411_3073031478037184512_n.jpeg" alt="Kép 25" onclick="openLightbox(this.src)">
+    </div>
+    <div class="image-box">
+        <img src="94656105_258409455336993_8241609054917492736_n.jpeg" alt="Kép 26" onclick="openLightbox(this.src)">
+    </div>
+    <div class="media-box">
+        <video class="media-video" poster="boritokep.jpg">
+        <source src="AQOFOfrtaNCdcV3xrnx7peMbRHEXsCSJ2e7hYL0s78vMb-KugLAPGPPsB2DoPWyK1o13rH93wFQB-GotUe2w-VHJdibNTY0ta7OGgpq5mPaZjz3I6Qed0CEH6TeXJA.mp4" type="video/mp4">
         A böngésződ nem támogatja a videólejátszást.
-      </video>
+        </video>
     </div>
   </div>
+</div>
 
-  <!-- confetti canvas -->
-  <canvas id="confettiCanvas" class="confetti" aria-hidden="true"></canvas>
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="Nagy kép">
+</div>
+
+<!-- Alul lila sáv -->
+<div class="love-footer">🎂 Készült sok szeretettel, Lilla és Kristóf 🎂</div>
+
+<!-- Konfetti -->
+<canvas id="confettiCanvas" class="confetti"></canvas>
 
 <script>
-/* --- ALAP FUNKCIÓK --- */
-function toggleMusic(){
-  const audio = document.getElementById('bgmusic');
-  const btn = document.getElementById('musicBtn');
-  if(!audio) return;
-  if(audio.paused){ audio.play().catch(e=>console.log('Autoplay blokk:',e)); btn.textContent="🔇 Kapcsold ki a zenét"; }
-  else { audio.pause(); btn.textContent="🎵 Indítsd el a zenét"; }
+  // Zene gomb funkció
+  function toggleMusic(){
+    const audio = document.getElementById('bgmusic');
+    const btn = document.getElementById('musicBtn');
+    if(audio.paused){
+      audio.play();
+      btn.textContent = "🔇 Kapcsold ki a zenét";
+    } else {
+      audio.pause();
+      btn.textContent = "🎵 Indítsd a zenét";
+    }
+  }
+
+  function openLightbox(src){
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  lb.style.display = 'flex';
 }
 
-/* --- DOMREADY: csak itt inicializáljuk a modal műveleteket --- */
-window.addEventListener('DOMContentLoaded', ()=>{
-
-  const modal = document.getElementById('mediaModal');
-  const modalImg = document.getElementById('modalImage');
-  const modalVideo = document.getElementById('modalVideo');
-  const modalVideoSource = document.getElementById('modalVideoSource');
-  const closeBtn = modal.querySelector('.close');
-
-  function openModalForImage(src){
-    modalImg.src = src;
-    modalImg.style.display = 'block';
-    modalVideo.style.display = 'none';
-    modalVideo.pause?.();
-    modalVideoSource.src = '';
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden','false');
-  }
-  function openModalForVideo(src){
-    modalVideoSource.src = src;
-    modalVideo.load();
-    modalImg.style.display = 'none';
-    modalVideo.style.display = 'block';
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden','false');
-    // játék: play, fogja a promise hibát ha a böngésző tiltja (de kattintáskor nem kéne)
-    modalVideo.play().catch(err=>{
-      console.warn('Video play hiba (lehet autoplay szabály):', err);
-    });
-  }
-  function closeModal(){
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden','true');
-    // állítsd le a videót és ürítsd a source-t, hogy a böngésző felszabadítsa a memóriát
-    try{ modalVideo.pause(); modalVideo.currentTime = 0; }catch(e){}
-    modalVideoSource.src = '';
-    modalImg.src = '';
-  }
-
-  // képekre kattintás
-  document.querySelectorAll('.image-box img').forEach(img=>{
-    img.addEventListener('click', (e)=>{
-      openModalForImage(img.src);
-    });
-  });
-
-  // videókra kattintás (a .media-box-ot is kezeljük, ha máshol kattint a user)
-  document.querySelectorAll('.media-box').forEach(box=>{
-    box.addEventListener('click', (e)=>{
-      // keressük meg a source URL-t a video elemben (ha nincs, megpróbáljuk a data-src-t)
-      const vid = box.querySelector('video');
-      if(vid){
-        const s = vid.querySelector('source');
-        const src = (s && s.src) ? s.src : vid.currentSrc;
-        if(src) openModalForVideo(src);
-        else console.warn('Nincs video forrás beállítva a media-box-ban.');
-      }
-    });
-  });
-
-  // close gomb
-  closeBtn.addEventListener('click', closeModal);
-  // háttérre kattintva bezárás
-  modal.addEventListener('click', (e)=>{
-    if(e.target === modal) closeModal();
-  });
-  // ESC gomb
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
-
-}); // DOMContentLoaded
-
-/* --- Konfetti (folyamatos) --- */
-(function(){
+  function closeLightbox(){
+  document.getElementById('lightbox').style.display = 'none';
+}
+  
+  // Konfetti
   const canvas = document.getElementById('confettiCanvas');
   const ctx = canvas.getContext('2d');
   let W = canvas.width = window.innerWidth;
   let H = canvas.height = window.innerHeight;
-  let parts = [];
-  const colors = ['#ff6fb5','#6bffda','#ffd166','#9ad0f5','#c792ff'];
+  let particles = [];
+  const colors = ['#ff6fb5', '#6bffda', '#ffd166', '#9ad0f5', '#c792ff'];
 
-  function make(){
-    parts = [];
-    for(let i=0;i<140;i++){
-      parts.push({
+  function makeParticles(){
+    particles = [];
+    for(let i=0;i<120;i++){
+      particles.push({
         x: Math.random()*W,
         y: Math.random()*-H,
-        r: 4 + Math.random()*8,
+        r: 6 + Math.random()*9,
+        d: Math.random()*100 + 20,
         vx: (Math.random()-0.5)*2,
-        vy: 2 + Math.random()*4,
+        vy: 2 + Math.random()*5,
         color: colors[Math.floor(Math.random()*colors.length)],
-        tilt: Math.random()*0.6
+        tilt: Math.random()*0.5
       });
     }
   }
-  function update(){
-    for(let p of parts){
-      p.x += p.vx; p.y += p.vy; p.tilt += 0.06;
-      if(p.y > H + 30){ p.x = Math.random()*W; p.y = -20 - Math.random()*H; }
+
+  function updateParticles(){
+    for(let p of particles){
+      p.x += p.vx;
+      p.y += p.vy;
+      p.tilt += 0.05;
+      if(p.y > H + 30){
+        p.x = Math.random()*W;
+        p.y = -20 - Math.random()*H;
+      }
     }
   }
-  function draw(){
+
+  function drawParticles(){
     ctx.clearRect(0,0,W,H);
-    for(let p of parts){
+    for(let p of particles){
       ctx.fillStyle = p.color;
       ctx.beginPath();
-      ctx.ellipse(p.x,p.y,p.r,p.r*0.6,p.tilt,0,Math.PI*2);
+      ctx.ellipse(p.x, p.y, p.r, p.r*0.6, p.tilt, 0, Math.PI*2);
       ctx.fill();
     }
   }
-  function loop(){
-    update(); draw(); requestAnimationFrame(loop);
-  }
-  window.addEventListener('resize', ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; make(); });
-  make(); loop();
-})();
 
+  function loop(){
+    updateParticles();
+    drawParticles();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize', ()=>{
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+
+  makeParticles();
+  loop();
+
+window.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById("mediaModal");
+    const modalImg = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const modalVideoSource = document.getElementById("modalVideoSource");
+    const closeBtn = modal.querySelector(".close");
+
+    // Képek kattintása (ha lennének media-box img elemek)
+    document.querySelectorAll(".media-box img").forEach(img => {
+      img.addEventListener("click", () => {
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+        modalImg.style.display = "block";
+        modalVideo.style.display = "none";
+        modalVideo.pause();
+      });
+    });
+
+// Videók kattintása
+document.querySelectorAll(".media-video").forEach(videoBox => {
+  videoBox.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const modal = document.getElementById("mediaModal");
+    const modalImg = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const modalVideoSource = document.getElementById("modalVideoSource");
+
+    modal.style.display = "flex";
+    modalImg.style.display = "none";
+    modalVideo.style.display = "block";
+
+    // Forrás beállítása és lejátszás
+    modalVideoSource.src = videoBox.querySelector("source").src;
+    modalVideo.load();
+    modalVideo.play().catch(err => {
+      console.log("Lejátszási hiba:", err);
+    });
+  });
+});
+
+    // Bezárás (X gomb)
+    closeBtn.onclick = function() {
+      modal.style.display = "none";
+      modalVideo.pause();
+    }
+
+    // Bezárás háttérre kattintva
+    modal.onclick = function(e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        modalVideo.pause();
+      }
+    }
+  });
 </script>
+
+<div id="mediaModal" class="modal">
+  <span class="close">&times;</span>
+  <div class="modal-content">
+    <img id="modalImage" src="" alt="">
+    <video id="modalVideo" controls style="display:none;">
+      <source id="modalVideoSource" src="" type="video/mp4">
+      A böngésződ nem támogatja a videólejátszást.
+    </video>
+  </div>
+</div>
+  
 </body>
+
 </html>
+
+
+
+
+
+
+
+
