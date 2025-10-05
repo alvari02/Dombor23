@@ -350,16 +350,6 @@
       btn.textContent = "🎵 Indítsd a zenét";
     }
   }
-
-document.querySelectorAll('.media-video').forEach(video => {
-    video.addEventListener('click', () => {
-      if (video.paused) {
-        video.play();
-      } else {
-        video.pause();
-      }
-    });
-  });
   
   // Konfetti
   const canvas = document.getElementById('confettiCanvas');
@@ -493,6 +483,7 @@ modal.onclick = function(e) {
 </body>
 
 </html>
+
 
 
 
