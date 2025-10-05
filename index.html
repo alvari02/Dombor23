@@ -440,18 +440,27 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Videók kattintása
-    document.querySelectorAll(".media-video").forEach(video => {
-      video.addEventListener("click", (e) => {
-        e.stopPropagation();
-        modal.style.display = "flex";
-        modalImg.style.display = "none";
-        modalVideo.style.display = "block";
-        modalVideoSource.src = video.querySelector("source").src;
-        modalVideo.load();
-        modalVideo.play();
-      });
+// Videók kattintása
+document.querySelectorAll(".media-video").forEach(videoBox => {
+  videoBox.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const modal = document.getElementById("mediaModal");
+    const modalImg = document.getElementById("modalImage");
+    const modalVideo = document.getElementById("modalVideo");
+    const modalVideoSource = document.getElementById("modalVideoSource");
+
+    modal.style.display = "flex";
+    modalImg.style.display = "none";
+    modalVideo.style.display = "block";
+
+    // Forrás beállítása és lejátszás
+    modalVideoSource.src = videoBox.querySelector("source").src;
+    modalVideo.load();
+    modalVideo.play().catch(err => {
+      console.log("Lejátszási hiba:", err);
     });
+  });
+});
 
     // Bezárás (X gomb)
     closeBtn.onclick = function() {
@@ -483,6 +492,7 @@ window.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
