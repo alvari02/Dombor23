@@ -103,24 +103,58 @@
 }
 
 .media-box {
-  width: 400px;         /* vagy amit használsz a képeknél */
-  height: 300px;
+  width: 320px;
+  height: 220px;
   border-radius: 12px;
   overflow: hidden;
+  background: #ddd;
+  flex-shrink: 0;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  background-color: #000;
+  position: relative;
 }
 
-.media-box img,
 .media-box video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
+/* Play gomb középen */
+.media-box .play-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.media-box .play-overlay::before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 20px solid white;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  margin-left: 4px;
+}
+
+.media-box:hover .play-overlay {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(0, 0, 0, 0.65);
+}
+
 
   .modal {
   display: none;
@@ -318,11 +352,11 @@
     <div class="image-box">
         <img src="94656105_258409455336993_8241609054917492736_n.jpeg" alt="Kép 26" onclick="openLightbox(this.src)">
     </div>
-    <div class="media-box">
-        <video class="media-video" poster="2025-10-05-180053.jpeg">
+    <div class="media-box" data-type="video">
+      <video class="media-video" preload="metadata" poster="2025-10-05-180053.jpeg">
         <source src="AQOFOfrtaNCdcV3xrnx7peMbRHEXsCSJ2e7hYL0s78vMb-KugLAPGPPsB2DoPWyK1o13rH93wFQB-GotUe2w-VHJdibNTY0ta7OGgpq5mPaZjz3I6Qed0CEH6TeXJA.mp4" type="video/mp4">
-        A böngésződ nem támogatja a videólejátszást.
-        </video>
+      </video>
+      <div class="play-overlay"></div>
     </div>
   </div>
 </div>
@@ -492,6 +526,7 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
 </body>
 
 </html>
+
 
 
 
