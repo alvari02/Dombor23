@@ -272,6 +272,13 @@
   <h1><span class="sparkle">Boldog szülinapot, Dombor!</span></h1>
   <button id="musicBtn" onclick="toggleMusic()">🎵 Indítsd el a zenét</button>
 
+<div id="ageCounter" style="text-align:center;margin:18px 0;font-family:inherit;">
+  <div style="font-weight:700;font-size:18px;margin-bottom:6px;">Másodpercre pontosan ennyi idős vagy:</div>
+  <div id="ageText" style="font-size:16px; background: rgba(255,255,255,0.06); padding:10px 14px; border-radius:10px; display:inline-block; min-width:420px;">
+    -- év -- hónap -- nap -- óra -- perc -- másodperc
+  </div>
+</div>
+  
   <!-- Képek -->
   <div class="image-row">
     <div class="image-box">
@@ -543,6 +550,74 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
       }
     }
   });
+
+(function(){
+  // Kezdő dátum: év, hónap-1 (0-alapú a JS-ben), nap, óra, perc, mp
+  const startDate = new Date(2002, 9, 20, 16, 55, 0); // 2002-10-20 16:55:00
+
+  const el = document.getElementById('ageText');
+
+  function daysInMonth(year, monthIndex){
+    // monthIndex 0-11
+    return new Date(year, monthIndex + 1, 0).getDate();
+  }
+
+  function computeDiff(fromDate, toDate){
+    // Másoljuk az fromDate-et, majd fokozatosan számoljuk ki az eltérést
+    let y1 = fromDate.getFullYear(), m1 = fromDate.getMonth(), d1 = fromDate.getDate();
+    let hh1 = fromDate.getHours(), mm1 = fromDate.getMinutes(), ss1 = fromDate.getSeconds();
+
+    let y2 = toDate.getFullYear(), m2 = toDate.getMonth(), d2 = toDate.getDate();
+    let hh2 = toDate.getHours(), mm2 = toDate.getMinutes(), ss2 = toDate.getSeconds();
+
+    let years = y2 - y1;
+    let months = m2 - m1;
+    let days = d2 - d1;
+    let hours = hh2 - hh1;
+    let minutes = mm2 - mm1;
+    let seconds = ss2 - ss1;
+
+    // Normalizálás visszafelé (ha bármely komponens negatív)
+    if (seconds < 0) { seconds += 60; minutes -= 1; }
+    if (minutes < 0) { minutes += 60; hours -= 1; }
+    if (hours < 0)   { hours += 24; days -= 1; }
+
+    if (days < 0) {
+      // vegyük a "megelőző" hónap napjainak számát az 'toDate' hónapját megelőző hónapra
+      // ha a jelenlegi hónap (m2) január (0), akkor előző év december
+      let prevMonthIndex = m2 - 1;
+      let prevMonthYear = y2;
+      if (prevMonthIndex < 0) { prevMonthIndex = 11; prevMonthYear = y2 - 1; }
+      days += daysInMonth(prevMonthYear, prevMonthIndex);
+      months -= 1;
+    }
+
+    if (months < 0) { months += 12; years -= 1; }
+
+    return { years, months, days, hours, minutes, seconds };
+  }
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function update(){
+    const now = new Date();
+    const diff = computeDiff(startDate, now);
+
+    // Később ha szeretnéd, itt testreszabhatod a szöveg sorrendjét/megjelenítését.
+    el.textContent = 
+      `${diff.years} év ` +
+      `${diff.months} hónap ` +
+      `${diff.days} nap ` +
+      `${pad(diff.hours)} óra ` +
+      `${pad(diff.minutes)} perc ` +
+      `${pad(diff.seconds)} másodperc`;
+  }
+
+  // Első frissítés rögtön, majd másodpercenként
+  update();
+  setInterval(update, 1000);
+})();
+  
 </script>
 
 <div id="mediaModal" class="modal">
@@ -559,6 +634,7 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
 </body>
 
 </html>
+
 
 
 
