@@ -550,20 +550,30 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
       }
     }
   });
+  
+</script>
 
-(function(){
-  // Kezdő dátum: év, hónap-1 (0-alapú a JS-ben), nap, óra, perc, mp
+<div id="mediaModal" class="modal">
+  <span class="close">&times;</span>
+  <div class="modal-content">
+    <img id="modalImage" src="" alt="">
+    <video id="modalVideo" controls style="display:none;">
+      <source id="modalVideoSource" src="" type="video/mp4">
+      A böngésződ nem támogatja a videólejátszást.
+    </video>
+  </div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
   const startDate = new Date(2002, 9, 20, 16, 55, 0); // 2002-10-20 16:55:00
-
   const el = document.getElementById('ageText');
 
   function daysInMonth(year, monthIndex){
-    // monthIndex 0-11
     return new Date(year, monthIndex + 1, 0).getDate();
   }
 
   function computeDiff(fromDate, toDate){
-    // Másoljuk az fromDate-et, majd fokozatosan számoljuk ki az eltérést
     let y1 = fromDate.getFullYear(), m1 = fromDate.getMonth(), d1 = fromDate.getDate();
     let hh1 = fromDate.getHours(), mm1 = fromDate.getMinutes(), ss1 = fromDate.getSeconds();
 
@@ -577,14 +587,11 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
     let minutes = mm2 - mm1;
     let seconds = ss2 - ss1;
 
-    // Normalizálás visszafelé (ha bármely komponens negatív)
     if (seconds < 0) { seconds += 60; minutes -= 1; }
     if (minutes < 0) { minutes += 60; hours -= 1; }
     if (hours < 0)   { hours += 24; days -= 1; }
 
     if (days < 0) {
-      // vegyük a "megelőző" hónap napjainak számát az 'toDate' hónapját megelőző hónapra
-      // ha a jelenlegi hónap (m2) január (0), akkor előző év december
       let prevMonthIndex = m2 - 1;
       let prevMonthYear = y2;
       if (prevMonthIndex < 0) { prevMonthIndex = 11; prevMonthYear = y2 - 1; }
@@ -602,8 +609,6 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
   function update(){
     const now = new Date();
     const diff = computeDiff(startDate, now);
-
-    // Később ha szeretnéd, itt testreszabhatod a szöveg sorrendjét/megjelenítését.
     el.textContent = 
       `${diff.years} év ` +
       `${diff.months} hónap ` +
@@ -613,27 +618,16 @@ document.querySelectorAll(".media-video").forEach(videoBox => {
       `${pad(diff.seconds)} másodperc`;
   }
 
-  // Első frissítés rögtön, majd másodpercenként
   update();
   setInterval(update, 1000);
-})();
-  
+});
 </script>
 
-<div id="mediaModal" class="modal">
-  <span class="close">&times;</span>
-  <div class="modal-content">
-    <img id="modalImage" src="" alt="">
-    <video id="modalVideo" controls style="display:none;">
-      <source id="modalVideoSource" src="" type="video/mp4">
-      A böngésződ nem támogatja a videólejátszást.
-    </video>
-  </div>
-</div>
   
 </body>
 
 </html>
+
 
 
 
